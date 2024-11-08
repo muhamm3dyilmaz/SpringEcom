@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api")
@@ -58,10 +59,22 @@ public class ProductController {
     public ResponseEntity<?> addProduct(@RequestPart Product product, MultipartFile imageFile) {
         Product createdProduct;
         try {
-            createdProduct = productService.addProduct(product, imageFile);
+            createdProduct = productService.addOrUpdateProduct(product, imageFile);
             return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable String id, @RequestPart Product product,
+            MultipartFile imageFile) {
+        Product updatedProduct = null;
+        try {
+            updatedProduct = productService.addOrUpdateProduct(product, imageFile);
+            return new ResponseEntity<>("Updated", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
