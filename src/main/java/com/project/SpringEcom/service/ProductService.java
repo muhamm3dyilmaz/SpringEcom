@@ -32,4 +32,8 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public void deleteProduct(int id) {
+        productRepository.deleteById(id);
+    }
+
 }
